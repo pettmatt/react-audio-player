@@ -1,14 +1,14 @@
 import { AiFillCaretRight, AiFillStepBackward, AiFillStepForward, AiOutlinePause } from 'react-icons/ai'
 import { useEffect, useState, useRef } from 'react'
+import test1 from '../assets/easy-lifestyle.mp3'
+import test2 from '../assets/something-about-you-marilyn-ford.mp3'
 import useSound from 'use-sound'
-import test1 from '../assets/test.mp3'
-import test2 from '../assets/nightcore_-_try-x9WpVoAC3tk_fmt43.mp3'
 import '../css/components/audio-player.scss'
 
 const AudioPlayer = () => {
-  const [image, setImage] = useState(false)
-  const [currentSong, setCurrentSong] = useState({ track: test1, index: 0 })
+  const image = useRef(false)
   const [queue, setQueue] = useState([test1, test2])
+  const [currentSong, setCurrentSong] = useState({ track: queue[0], index: 0 })
   const [seconds, setSeconds] = useState(false)
   const [playing, setPlaying] = useState(false)
   const [play, { pause, duration, sound }] = useSound(currentSong.track, {
@@ -89,7 +89,6 @@ const AudioPlayer = () => {
   const addToQueue = (event) => {
     setQueue([...queue, event.target.value])
     event.target.value = ''
-    console.log(queue)
   }
 
   return (
@@ -98,13 +97,13 @@ const AudioPlayer = () => {
       <header>
         <div className='image-container'>
           {
-            image ? <img src='#' className='image' /> : <div className='image'>M</div>
+            image.current ? <img src='#' className='image' /> : <div className='image'>M</div>
           }
         </div>
       </header>
       <div id='controls'>
         <div id='buttons'>
-          <button>
+          <button onClick={ previousSong }>
             <AiFillStepBackward />
           </button>
           <button onClick={ togglePlay }>
@@ -135,10 +134,6 @@ const AudioPlayer = () => {
       </div>
     </div>
 
-    {/* <div id='add-source'>
-      <input id='' type='file' name='source_input' accept='audio/*, .mp3' onChange={ addToQueue } />
-    </div> */}
-
     <div id='playlist'>
       { queue.map((source, index) => (
         <div key={index} className='playlist-item'>
@@ -147,6 +142,11 @@ const AudioPlayer = () => {
         </div>
       )) }
     </div>
+
+    {/* Adding a new audio file through input element creates an invalid path which is not allowed */}
+    {/* <div id='add-source'>
+      <input type='file' name='source_input' accept='audio/*, .mp3' onChange={ addToQueue } />
+    </div> */}
     </>
   )
 }
